@@ -34,6 +34,7 @@ class Trie:
                 for l in range(length):
                         index = key[l]
                         index = charToIndex(index)
+                        #print(index)
                         if not pCrawl.children[index]:
                                 pCrawl.children[index] = self.getNode()
                         #Iterate the pCrawl
@@ -49,6 +50,7 @@ class Trie:
                 for l in range(length):
                         index = key[l]
                         index = charToIndex(index)
+                        #print(index)
                         if not pCrawl.children[index]:
                                 return False
                         pCrawl= pCrawl.children[index]
