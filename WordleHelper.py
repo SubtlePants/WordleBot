@@ -11,8 +11,6 @@ def buildWordleTrie():
     while True:
         line = file1.readline()
         #remove the line break character
-        #had to add this twice when calling from outside python environment for some reason
-        line = line[:-1]
         line = line[:-1]
 
         if not line:
@@ -27,6 +25,8 @@ def getNextWord(dataDict, wordleTrie):
     #assumes a data dictionary that has been updated with new information from the previous guess
     #recursively traverses the tree (DFS) to find the first elegible word based on the data dictionary
     knownLetters = getKnownLetters(dataDict)
+    print("The Known Letters Are")
+    print(knownLetters)
     currentNode = wordleTrie.root
     nextWordIndexes= traverseTrie(currentNode,knownLetters,0,dataDict)
     #convert the arrray of indices to a string of characters
@@ -40,9 +40,12 @@ def getNextWord(dataDict, wordleTrie):
 def traverseTrie(currentNode,letters,currentIndex,dataDict):
     #returns the remaining list of characters in a recursive call
     #currentNode is the current position on the Trie
-    #letters are the remaining letter that MUST be included in the word
+    #letters are the remaining l!etter that MUST be included in the word
     #currentIndex is the spot in the word for which we are choosing a character 0-4
     #dataDict is the dictionary containing known word information
+
+    #print("Letters == ")
+    #print(letters)
 
     if letters == None:
         letters = []
@@ -66,27 +69,43 @@ def traverseTrie(currentNode,letters,currentIndex,dataDict):
         currentIndex += 1
         returnWord= [definedLetter]
         returnWord.extend(traverseTrie(currentNode,letters,currentIndex,dataDict))
+        #print("This word from defined letters: ")
+        #print(returnWord)
         return returnWord
 
     #if the next node can be one of the remaining letters, traverse to that node next
     #make sure the letter chosen is available from this space in the word from the dictionary
     for char in letters:
         if currentNode.children[char] and (dataDict.get(char).positionInfo[currentIndex]!=0):
-            currentNode = currentNode.children[char]
-            currentIndex += 1
-            letters= letters.remove(char)
+            nextNode = currentNode.children[char]
+            nextIndex = currentIndex + 1
+            nextLetters= letters.copy()
+            nextLetters.remove(char)
             returnWord=[char]
-            returnWord.extend(traverseTrie(currentNode,letters,currentIndex,dataDict))
+            returnWord.extend(traverseTrie(nextNode,nextLetters,nextIndex,dataDict))
+            #print("This word from known letters: ")
+            #print(returnWord)
+            if len(returnWord) != (5-currentIndex):
+                #if the result will not yield a 5 letter word, continue looping
+                continue
             return returnWord
 
     #otherwise, find the first node that exists traverse the Trie
     #make sure the letter chosen has not yet been eliminated from the word
     for char in range(26):
         if currentNode.children[char] and (dataDict.get(char).inWord != False):
-            currentNode= currentNode.children[char]
-            currentIndex += 1
+            nextNode= currentNode.children[char]
+            nextIndex = currentIndex + 1
             returnWord=[char]
-            returnWord.extend(traverseTrie(currentNode, letters, currentIndex, dataDict))
+            returnWord.extend(traverseTrie(nextNode, letters, nextIndex, dataDict))
+            #print("This word from unknown letters: ")
+            #print(returnWord)
+            if len(returnWord) != (5-currentIndex):
+                #if the result will not yield a 5 letter word, continue looping
+                continue
+            if len(letters) > (5 - nextIndex):
+                #ensure that all known letters can still be present in the final word
+                return []
             return returnWord
 
     #else, no letter is available, return none
