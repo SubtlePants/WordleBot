@@ -93,7 +93,7 @@ def traverseTrie(currentNode,letters,currentIndex,dataDict):
     #otherwise, find the first node that exists traverse the Trie
     #make sure the letter chosen has not yet been eliminated from the word
     for char in range(26):
-        if currentNode.children[char] and (dataDict.get(char).inWord != False):
+        if currentNode.children[char] and (dataDict.get(char).inWord != False) and (dataDict.get(char).positionInfo[currentIndex] != 0):
             nextNode= currentNode.children[char]
             nextIndex = currentIndex + 1
             returnWord=[char]
@@ -125,6 +125,7 @@ def updateDictionary(guess, clues, dataDict):
 
         if clues[x] == 0:
             dataDict.get(char).inWord= 0
+            dataDict.get(char).positionInfo = [0,0,0,0,0]
         if clues[x] == 1:
             dataDict.get(char).inWord= 1
             dataDict.get(char).positionInfo[x] = 0

@@ -16,6 +16,7 @@ def getKnownLetters(dataDictionary):
         if (dataDictionary.get(x).inWord == 1) and (dataDictionary.get(x).positionKnown == False):
             letters.append(x)
     return letters
+    
 
 def getDefinedLetter(dataDictionary, position):
     #returns the character code of a character that is known to occupy the word at the given position
