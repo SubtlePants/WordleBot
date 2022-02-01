@@ -4,6 +4,9 @@
 def charToIndex(chr):
         #returns a lowercase character encoded as an integer with 'a' == 0 and 'z' == 25
         return ord(chr) - ord('a')
+def indexToChar(ind):
+        #returns a lowercase character from it's encoding as an integer
+        return chr(ind + ord('a'))
 
 class TrieNode:
         """The Node of the Trie"""
